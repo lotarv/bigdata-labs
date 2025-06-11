@@ -1,11 +1,10 @@
 library(rvest)
 
-# Русские и английские названия стран
 countries_ru <- c("Корея", "Румыния", "Чехия", "Китай", "Япония")
 countries_en <- c("South Korea", "Romania", "Czech Republic", "China", "Japan")
-names(countries_en) <- countries_ru  # связь русских и английских названий
+names(countries_en) <- countries_ru 
 
-# Сбор данных
+
 yearly_data <- list()
 
 for (year in 2014:2021) {
@@ -21,7 +20,7 @@ for (year in 2014:2021) {
                        "Индекс загрязнения", "Индекс климата")
   
   filtered <- table[table$Страна %in% countries_en, ]
-  filtered$Страна <- names(countries_en)[match(filtered$Страна, countries_en)]  # заменяем на русские названия
+  filtered$Страна <- names(countries_en)[match(filtered$Страна, countries_en)]
   
   numeric_cols <- setdiff(names(filtered), "Страна")
   filtered[numeric_cols] <- lapply(filtered[numeric_cols], function(x) {
@@ -41,7 +40,7 @@ all_data <- do.call(rbind, lapply(names(yearly_data), function(year) {
   df
 }))
 
-# Удаляем строки с NA для климата в 2014–2015
+
 all_data <- all_data[!(all_data$Год %in% 2014:2015 & is.na(all_data$`Индекс климата`)), ]
 
 индексы <- setdiff(names(all_data), c("Страна", "Год"))
